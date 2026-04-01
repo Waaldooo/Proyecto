@@ -1,7 +1,7 @@
 package pck_Proyecto;
 
 public class Renta {
-   private int idRenta;
+    private int idRenta;
     private int idVehiculo;
     private String idCliente;
     private Fecha fechaRenta;
