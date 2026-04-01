@@ -38,5 +38,10 @@ public class Motocicleta extends Vehiculo{
     public int getNoLlantas() {
         return noLlantas;
     }
-    
+    public String getDatos() {
+        return super.getDatos() +
+               "\nTipo: " + getTipo ()+
+               "\nTransmision: " + getNoVelocidades() +
+               "\nNo. Puertas: " + getNoLlantas();
+    }
 }

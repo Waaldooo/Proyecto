@@ -57,8 +57,12 @@ public class Vehiculo {
     public String getColor() {
         return color;
     }
-    String getDatos(){
-        return "ID: "+ getIdVehiculo();
+    public String getDatos() {
+        return "ID: " + getIdVehiculo() +
+               "\nMarca: " + getMarca ()+
+               "\nModelo: " + getModelo() +
+               "\nAño: " + getAnio() +
+               "\nColor: " + getColor();
     }
     
 }

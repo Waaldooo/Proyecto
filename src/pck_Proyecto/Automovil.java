@@ -38,6 +38,11 @@ public class Automovil extends Vehiculo {
     public int getNoPuertas() {
         return noPuertas;
     }
-    
+    public String getDatos() {
+        return super.getDatos() +
+               "\nTipo: " + getTipo() +
+               "\nTransmision: " + getTransmision() +
+               "\nNo. Puertas: " + getNoPuertas();
+    }
     
 }
