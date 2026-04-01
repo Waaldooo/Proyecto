@@ -1,26 +1,26 @@
-package pck_Proyecto;
+package pck_proyecto;
 
-public class Automovil {
-    protected String tipo;
-    protected String transmicion;
-    protected int noPuertas;
-    
-    public Automovil(String tipo, String transmicion, int noPuertas){
+public class Automovil extends Vehiculo {
+    private String tipo;
+    private String transmision;
+    private int noPuertas;
+
+    public Automovil(String tipo, String transmision, int noPuertas, int idVehiculo, String modelo, String marca, int anio, String color) {
+        super(idVehiculo, modelo, marca, anio, color);
         this.tipo = tipo;
-        this.transmicion = transmicion;
+        this.transmision = transmision;
         this.noPuertas = noPuertas;
     }
-    
-    public Automovil(){
-        this(null, null, 0);
+    public Automovil() {
+        this(null, null, 0,0,null,null,0, null);
     }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
-    public void setTransmicion(String transmicion) {
-        this.transmicion = transmicion;
+    public void setTransmision(String transmision) {
+        this.transmision = transmision;
     }
 
     public void setNoPuertas(int noPuertas) {
@@ -31,17 +31,13 @@ public class Automovil {
         return tipo;
     }
 
-    public String getTransmicion() {
-        return transmicion;
+    public String getTransmision() {
+        return transmision;
     }
 
     public int getNoPuertas() {
         return noPuertas;
     }
     
-    public String getDatos(){
-        return "\nTipo:" + getTipo() +
-                "\nTransmicion: " + getTransmicion() +
-                "\nnoPuertas: " +getNoPuertas();
-    }
+    
 }
