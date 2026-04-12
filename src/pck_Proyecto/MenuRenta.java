@@ -102,7 +102,7 @@ public class MenuRenta {
                     do {
                         anio = 0;
                         try {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog(null, "Año:", "Alta de un Automóvil"));
+                            anio = Integer.parseInt(JOptionPane.showInputDialog(null, "Año:"));
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "El año debe ser numerico");
                         }
@@ -245,6 +245,16 @@ public class MenuRenta {
                 break;
 
                 case 4:
+                    if (clientes.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay clientes registrados");
+                        break;
+                    }
+
+                    if (autos.size() == 0 && motos.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay vehículos registrados");
+                        break;
+                    }
+
                     do {
                         idRenta = -1;
                         try {
@@ -315,54 +325,52 @@ public class MenuRenta {
                     } while (idCliente.isBlank() || posC == -1);
 
                     do {
-                        do {
-                            dia = 0;
-                            try {
-                                dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                            }
-                        } while (dia <= 0 || dia > 31);
+                        dia = 0;
+                        try {
+                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (dia <= 0 || dia > 31);
 
-                        do {
-                            mes = 0;
-                            try {
-                                mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                            }
-                        } while (mes <= 0 || mes > 12);
+                    do {
+                        mes = 0;
+                        try {
+                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (mes <= 0 || mes > 12);
 
-                        do {
-                            anio = 0;
-                            try {
-                                anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                            }
-                        } while (anio < 2000 || anio > 2026);
+                    do {
+                        anio = 0;
+                        try {
+                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (anio < 2000 || anio > 2026);
 
-                        Fecha fechaR = new Fecha(dia, mes, anio);
+                    Fecha fechaR = new Fecha(dia, mes, anio);
 
-                        do {
-                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
-                        } while (dia <= 0 || dia > 31);
+                    do {
+                        dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
+                    } while (dia <= 0 || dia > 31);
 
-                        do {
-                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
-                        } while (mes <= 0 || mes > 12);
+                    do {
+                        mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
+                    } while (mes <= 0 || mes > 12);
 
-                        do {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
-                        } while (anio < 2000 || anio > 2026);
+                    do {
+                        anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
+                    } while (anio < 2000 || anio > 2026);
 
-                        Fecha fechaE = new Fecha(dia, mes, anio);
+                    Fecha fechaE = new Fecha(dia, mes, anio);
 
-                        rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
+                    rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
 
-                        JOptionPane.showMessageDialog(null, "Renta registrada");
+                    JOptionPane.showMessageDialog(null, "Renta registrada");
 
-                    } while (false);
                 break;
 
                 case 5:
