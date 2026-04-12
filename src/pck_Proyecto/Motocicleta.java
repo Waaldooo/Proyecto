@@ -1,6 +1,8 @@
 package pck_proyecto;
 
-public class Motocicleta extends Vehiculo{
+import java.io.Serializable;
+
+public class Motocicleta extends Vehiculo implements Serializable {
     private String tipo;
     private int noVelocidades;
     private int noLlantas;
@@ -39,9 +41,9 @@ public class Motocicleta extends Vehiculo{
         return noLlantas;
     }
     public String getDatos() {
-        return super.getDatos() +
-               "\nTipo: " + getTipo ()+
-               "\nTransmision: " + getNoVelocidades() +
-               "\nNo. Puertas: " + getNoLlantas();
+    return super.getDatos() +
+           "\nTipo: " + getTipo() +
+           "\nNo. Velocidades: " + getNoVelocidades() +
+           "\nNo. Llantas: " + getNoLlantas();
     }
 }

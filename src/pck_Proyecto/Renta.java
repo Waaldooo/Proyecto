@@ -1,6 +1,8 @@
-package pck_Proyecto;
+package pck_proyecto;
 
-public class Renta {
+import java.io.Serializable;
+
+public class Renta implements Serializable{
     private int idRenta;
     private int idVehiculo;
     private String idCliente;

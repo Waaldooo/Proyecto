@@ -1,6 +1,8 @@
 package pck_proyecto;
 
-public class Automovil extends Vehiculo {
+import java.io.Serializable;
+
+public class Automovil extends Vehiculo implements Serializable {
     private String tipo;
     private String transmision;
     private int noPuertas;

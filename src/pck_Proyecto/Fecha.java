@@ -1,6 +1,8 @@
-package pck_Proyecto;
+package pck_proyecto;
 
-public class Fecha {
+import java.io.Serializable;
+
+public class Fecha implements Serializable{
     private int dia, mes,anio;
 
     public Fecha(int dia, int mes, int anio) {

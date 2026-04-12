@@ -1,6 +1,8 @@
-package pck_Proyecto;
+package pck_proyecto;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable {
     private String idCliente;
     private String nombre;
     private String tipo;
@@ -72,6 +74,6 @@ public class Cliente {
                "\nNombre: " + getNombre() +
                "\nTelefono: " + getTelefono() +
                "\nCorreo: " + getCorreo() +
-               "\nFecha Nacimiento: " + getFechaNacimiento();
+               "\nFecha Nacimiento: " + getFechaNacimiento().getFecha();
     }
 }

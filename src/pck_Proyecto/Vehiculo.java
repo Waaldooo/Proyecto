@@ -1,6 +1,8 @@
 package pck_proyecto;
 
-public class Vehiculo {
+import java.io.Serializable;
+
+public class Vehiculo implements Serializable {
     protected int idVehiculo;
     protected String modelo;
     protected String marca;

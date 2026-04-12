@@ -1,15 +1,47 @@
-package pck_Proyecto;
+package pck_proyecto;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class MenuRenta {
 
     public static void main(String[] args) {
         //Arreglos
-        Vehiculo[] vehiculo = new Vehiculo[20];
-        Renta[] renta = new Renta[20];
-        Cliente[] cliente = new Cliente[20];
-        Fecha[] fecha = new Fecha[20];
+        ArrayList<Automovil> autos = new ArrayList<>();
+        ArrayList<Motocicleta> motos = new ArrayList<>();
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        ArrayList<Renta> rentas = new ArrayList<>();
+        FileInputStream fin = null;
+        try {
+            fin = new FileInputStream("datos.txt");
+            ObjectInputStream entrada = new ObjectInputStream(fin);
+
+            autos = (ArrayList<Automovil>) entrada.readObject();
+            motos = (ArrayList<Motocicleta>) entrada.readObject();
+            clientes = (ArrayList<Cliente>) entrada.readObject();
+            rentas = (ArrayList<Renta>) entrada.readObject();
+
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Error de clase");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Archivo no encontrado");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error de lectura");
+        } finally {
+            try {
+                if (fin != null) {
+                    fin.close();
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar");
+            }
+        }
         //Variables
         int op, idVehiculo, anio, noPuertas, noVelocidades, noLlantas, idRenta, dia, mes, contV = 0, contR = 0, busVehiculo, posV, posR, posC, res;
         String tipo, transmision, modelo, marca, color, idCliente, nombre, telefono, correo, listaAutomoviles, listaMotocicletas, listaClientes, listaRentas;
@@ -47,16 +79,12 @@ public class MenuRenta {
 
             switch (op) {
                 case 1:
-                    // Alta de automóvil
                     do {
                         idVehiculo = -1;
                         try {
                             idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id del Automovil:", "Alta de un Automóvil", 3));
                             if (idVehiculo <= 0) {
                                 JOptionPane.showMessageDialog(null, "El Id del Automóvil debe ser positivo", "Dato Erroneo", 2);
-                            } else if (existeVehiculo(vehiculo, idVehiculo, contV)) {
-                                JOptionPane.showMessageDialog(null, "Id de vehiculo ya existente", "Dato Erroneo", 2);
-                                idVehiculo = -1;
                             }
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "El id del automóvil debe ser numerico", "Dato erroneo", 2);
@@ -65,161 +93,102 @@ public class MenuRenta {
 
                     do {
                         modelo = JOptionPane.showInputDialog(null, "Modelo:", "Alta de un Automóvil", 3);
-                        if (modelo.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El modelo es algo requerido.", "Dato Erroneo", 2);
-                        }
                     } while (modelo.isBlank());
 
                     do {
                         marca = JOptionPane.showInputDialog(null, "Marca:", "Alta de un Automóvil", 3);
-                        if (marca.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "La marca es algo requerido.", "Dato Erroneo", 2);
-                        }
                     } while (marca.isBlank());
 
                     do {
                         anio = 0;
                         try {
                             anio = Integer.parseInt(JOptionPane.showInputDialog(null, "Año:", "Alta de un Automóvil"));
-                            if (anio < 1900 || anio > 2027) {
-                                JOptionPane.showMessageDialog(null, "El año debe se estar entre 1900 y 2027", "Dato Erroneo", 2);
-                            }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El año debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "El año debe ser numerico");
                         }
                     } while (anio < 1900 || anio > 2027);
 
                     do {
                         color = JOptionPane.showInputDialog(null, "Color:", "Alta de un Automóvil", 3);
-                        if (color.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El color es algo requerido", "Dato Erroneo", 2);
-                        }
                     } while (color.isBlank());
 
                     do {
                         tipo = JOptionPane.showInputDialog(null, "Tipo:", "Alta de un Automóvil", 3);
-                        if (tipo.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El tipo es algo requerido", "Dato Erroneo", 2);
-                        }
                     } while (tipo.isBlank());
 
                     do {
                         transmision = JOptionPane.showInputDialog(null, "Transmisión:", "Alta de un Automóvil", 3);
-                        if (transmision.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "La transmision es algo requerido", "Dato Erroneo", 2);
-                        }
                     } while (transmision.isBlank());
 
                     do {
                         noPuertas = 0;
                         try {
                             noPuertas = Integer.parseInt(JOptionPane.showInputDialog(null, "No. de puertas:", "Alta de un Automóvil", 3));
-                            if (noPuertas < 2 || noPuertas > 4) {
-                                JOptionPane.showMessageDialog(null, "El no. de puertas debe ser entre 2 y 4", "Dato Erroneo", 2);
-                            }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El no. de puertas de ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (noPuertas < 2 || noPuertas > 4);
-                    break;
+
+                    autos.add(new Automovil(tipo, transmision, noPuertas, idVehiculo, modelo, marca, anio, color));
+                    JOptionPane.showMessageDialog(null, "Automóvil registrado");
+                break;
 
                 case 2:
-                    // Alta de una motocicleta
                     do {
                         idVehiculo = -1;
                         try {
                             idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la Motocicleta:", "Alta de una Motocicleta", 3));
-                            if (idVehiculo <= 0) {
-                                JOptionPane.showMessageDialog(null, "El Id de la motocicleta debe ser positivo", "Dato Erroneo", 2);
-                            } else if (existeVehiculo(vehiculo, idVehiculo, contV)) {
-                                JOptionPane.showMessageDialog(null, "Id de vehiculo ya existente", "Dato Erroneo", 2);
-                                idVehiculo = -1;
-                            }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id de la mocicleta debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idVehiculo <= 0);
 
                     do {
-                        modelo = JOptionPane.showInputDialog(null, "Modelo:", "Alta de una Motocicleta", 3);
-                        if (modelo.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El modelo es algo requerido.", "Dato Erroneo", 2);
-                        }
+                        modelo = JOptionPane.showInputDialog("Modelo:");
                     } while (modelo.isBlank());
 
                     do {
-                        marca = JOptionPane.showInputDialog(null, "Marca:", "Alta de una Motocicleta", 3);
-                        if (marca.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "La marca es algo requerido.", "Dato Erroneo", 2);
-                        }
+                        marca = JOptionPane.showInputDialog("Marca:");
                     } while (marca.isBlank());
 
                     do {
-                        anio = 0;
-                        try {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog(null, "Año:", "Alta de una Motocicleta"));
-                            if (anio < 1900 || anio > 2027) {
-                                JOptionPane.showMessageDialog(null, "El año debe se estar entre 1900 y 2027", "Dato Erroneo", 2);
-                            }
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El año debe ser numerico", "Dato Erroneo", 2);
-                        }
+                        anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
                     } while (anio < 1900 || anio > 2027);
 
                     do {
-                        color = JOptionPane.showInputDialog(null, "Color:", "Alta de una Motocicleta", 3);
-                        if (color.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El color es algo requerido", "Dato Erroneo", 2);
-                        }
+                        color = JOptionPane.showInputDialog("Color:");
                     } while (color.isBlank());
 
                     do {
-                        tipo = JOptionPane.showInputDialog(null, "Tipo:", "Alta de una Motocicleta", 3);
-                        if (tipo.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El tipo es algo requerido", "Dato Erroneo", 2);
-                        }
+                        tipo = JOptionPane.showInputDialog("Tipo:");
                     } while (tipo.isBlank());
 
                     do {
-                        noVelocidades = 0;
-                        try {
-                            noVelocidades = Integer.parseInt(JOptionPane.showInputDialog(null, "No. de velocidades:", "Alta de una motocicleta", 3));
-                            if (noVelocidades < 4 || noVelocidades > 7) {
-                                JOptionPane.showMessageDialog(null, "El no. de velocidades debe estar entre 4 y 7", "Dato Erroneo", 2);
-                            }
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El no. de velocidades debe ser numerico", "Dato Erroneo", 2);
-                        }
+                        noVelocidades = Integer.parseInt(JOptionPane.showInputDialog("No velocidades:"));
                     } while (noVelocidades < 4 || noVelocidades > 7);
 
                     do {
-                        noLlantas = 0;
-                        try {
-                            noLlantas = Integer.parseInt(JOptionPane.showInputDialog(null, "No. de llantas:", "Alta de una motocicleta", 3));
-                            if (noLlantas != 2) {
-                                JOptionPane.showMessageDialog(null, "El no. de llantas debe ser igual a 2 para que sea moto", "Dato erroneo", 2);
-                            }
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El no. de llantas debe ser numerico", "Dato erroneo", 2);
-                        }
+                        noLlantas = Integer.parseInt(JOptionPane.showInputDialog("No llantas:"));
                     } while (noLlantas != 2);
-                    break;
+
+                    motos.add(new Motocicleta(tipo, noVelocidades, noLlantas, idVehiculo, modelo, marca, anio, color));
+                    JOptionPane.showMessageDialog(null, "Motocicleta registrada");
+                break;
 
                 case 3:
-                    // Alta de un cliente
                     do {
                         idCliente = JOptionPane.showInputDialog(null, "Id del cliente:", "Alta de un Cliente", 3);
                         if (idCliente.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El id del cliente es algo requerido", "Dato ]Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "El id del cliente es algo requerido", "Dato Erroneo", 2);
                         }
                     } while (idCliente.isBlank());
 
                     do {
                         nombre = JOptionPane.showInputDialog(null, "Nombre del cliente:", "Alta de un Cliente", 3);
-                        if (idCliente.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El nombre del cliente es algo requerido", "Dato ]Erroneo", 2);
+                        if (nombre.isBlank()) {
+                            JOptionPane.showMessageDialog(null, "El nombre del cliente es algo requerido", "Dato Erroneo", 2);
                         }
-                    } while (idCliente.isBlank());
+                    } while (nombre.isBlank());
 
                     do {
                         tipo = JOptionPane.showInputDialog(null, "Tipo:", "Alta de un Cliente", 3);
@@ -235,481 +204,468 @@ public class MenuRenta {
                         }
                     } while (telefono.isBlank());
 
-                    boolean fechaValida;
                     do {
-                        do {
-                            dia = 0;
-                            try {
-                                dia = Integer.parseInt(JOptionPane.showInputDialog(null, "Dia de nacimiento:", "Alte de un cliente", 3));
-                                if (dia <= 0 || dia > 31) {
-                                    JOptionPane.showMessageDialog(null, "El dia debe estar entre 1 y 31", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El dia debe ser numerico", "Error", 2);
-                            }
-                        } while (dia <= 0 || dia > 31);
-
-                        do {
-                            mes = 0;
-                            try {
-                                mes = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Mes de nacimioento:", "Alta de un cliente", 3));
-                                if (mes <= 0 || mes > 12) {
-                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El mes debe ser numerico", "Error", 2);
-                            }
-                        } while (mes <= 0 || mes > 12);
-
-                        do {
-                            anio = 0;
-                            try {
-                                anio = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Año de nacimiento:", "Alta de un cliente", 3));
-                                if (anio > 2008 || anio > 1920) {
-                                    JOptionPane.showMessageDialog(null, "El Cliente debe ser mayor de edad", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El año debe ser numerico", "Error", 2);
-                            }
-                        } while (anio > 2008 || anio > 1920);
-                        fecha.setFecha(dia, mes, anio);
-                        fechaValida = fecha.fechaCorrecta();
-                        if (!fechaValida) {
-                            JOptionPane.showMessageDialog(null, "La fecha completa no es valida", "Error", 2);
+                        dia = 0;
+                        try {
+                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
-                    } while (!fechaValida);
+                    } while (dia <= 0 || dia > 31);
+
+                    do {
+                        mes = 0;
+                        try {
+                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (mes <= 0 || mes > 12);
+
+                    do {
+                        anio = 0;
+                        try {
+                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (anio < 1920 || anio > 2008);
+
+                    Fecha f = new Fecha(dia, mes, anio);
 
                     do {
                         correo = JOptionPane.showInputDialog(null, "Correo:", "Alta de un Cliente", 3);
                         if (correo.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El correo es algo requerido", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "El correo es requerido");
                         }
                     } while (correo.isBlank());
-                    break;
+
+                    clientes.add(new Cliente(idCliente, nombre, tipo, telefono, f, correo));
+                    JOptionPane.showMessageDialog(null, "Cliente registrado");
+                break;
 
                 case 4:
-                    // Alta de una renta
                     do {
                         idRenta = -1;
                         try {
-                            idRenta = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la Renta:", "Alta de una Renta", 3));
+                            idRenta = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la renta:", "Alta de renta", 3));
                             if (idRenta <= 0) {
-                                JOptionPane.showMessageDialog(null, "El Id de la renta debe ser positivo", "Dato Erroneo", 2);
-                            } else if (existeRenta(renta, idRenta, contR)) {
-                                JOptionPane.showMessageDialog(null, "Id de la renta ya existente", "Dato Erroneo", 2);
-                                idVehiculo = -1;
+                                JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id de la renta debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idRenta <= 0);
 
                     do {
                         idVehiculo = -1;
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id del Vehiculo:", "Alta de una Renta", 3));
+                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id del vehiculo:", "Alta de renta", 3));
                             if (idVehiculo <= 0) {
-                                JOptionPane.showMessageDialog(null, "El Id de la motocicleta debe ser positivo", "Dato Erroneo", 2);
-                            } else {
-                                busVehiculo = buscaVehiculo(vehiculo, idVehiculo, contV);
-                            }
-                            if (busVehiculo == -1) {
-                                JOptionPane.showMessageDialog(null, "El id del vehiculo no existe", "Sin datos", 1);
+                                JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id del vehiculo debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
-                    } while (idVehiculo <= 0);
+
+                        busVehiculo = -1;
+
+                        for (int i = 0; i < autos.size(); i++) {
+                            if (autos.get(i).getIdVehiculo() == idVehiculo) {
+                                busVehiculo = i;
+                                break;
+                            }
+                        }
+
+                        if (busVehiculo == -1) {
+                            for (int i = 0; i < motos.size(); i++) {
+                                if (motos.get(i).getIdVehiculo() == idVehiculo) {
+                                    busVehiculo = i;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (busVehiculo == -1) {
+                            JOptionPane.showMessageDialog(null, "El vehículo no existe");
+                        }
+
+                    } while (idVehiculo <= 0 || busVehiculo == -1);
 
                     do {
-                        idCliente = JOptionPane.showInputDialog(null, "Id del cliente:", "Alta de un Cliente", 3);
+                        idCliente = JOptionPane.showInputDialog(null, "Id del cliente:", "Alta de renta", 3);
+
                         if (idCliente.isBlank()) {
-                            JOptionPane.showMessageDialog(null, "El id del cliente es algo requerido", "Dato ]Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Campo obligatorio");
                         }
-                    } while (idCliente.isBlank());
-                    // Fecha de renta
-                    boolean fechaValida;
+
+                        posC = -1;
+
+                        for (int i = 0; i < clientes.size(); i++) {
+                            if (idCliente.equalsIgnoreCase(clientes.get(i).getIdCliente())) {
+                                posC = i;
+                                break;
+                            }
+                        }
+
+                        if (posC == -1) {
+                            JOptionPane.showMessageDialog(null, "El cliente no existe");
+                        }
+
+                    } while (idCliente.isBlank() || posC == -1);
+
                     do {
                         do {
                             dia = 0;
                             try {
-                                dia = Integer.parseInt(JOptionPane.showInputDialog(null, "Dia de Renta:", "Alte de una Renta", 3));
-                                if (dia <= 0 || dia > 31) {
-                                    JOptionPane.showMessageDialog(null, "El dia debe estar entre 1 y 31", "Dato erroneo", 2);
-                                }
+                                dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El dia debe ser numerico", "Error", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (dia <= 0 || dia > 31);
 
                         do {
                             mes = 0;
                             try {
-                                mes = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Mes de Renta:", "Alta de una Renta", 3));
-                                if (mes <= 0 || mes > 12) {
-                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12", "Dato erroneo", 2);
-                                }
+                                mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El mes debe ser numerico", "Error", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (mes <= 0 || mes > 12);
 
                         do {
                             anio = 0;
                             try {
-                                anio = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Año de Renta:", "Alta de una Renta", 3));
-                                if (anio > 2026 || anio > 1900) {
-                                    JOptionPane.showMessageDialog(null, "El año debe ser entre 2026 y 2000", "Dato erroneo", 2);
-                                }
+                                anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El año debe ser numerico", "Error", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
-                        } while (anio > 2026 || anio > 1900);
-                        fecha.setFecha(dia, mes, anio);
-                        fechaValida = fecha.fechaCorrecta();
-                        if (!fechaValida) {
-                            JOptionPane.showMessageDialog(null, "La fecha completa no es valida", "Error", 2);
-                        }
-                    } while (!fechaValida);
-                    //Fecha de entrega
-                    boolean fechaValida;
-                    do {
+                        } while (anio < 2000 || anio > 2026);
+
+                        Fecha fechaR = new Fecha(dia, mes, anio);
+
                         do {
-                            dia = 0;
-                            try {
-                                dia = Integer.parseInt(JOptionPane.showInputDialog(null, "Dia de Renta:", "Alte de una Renta", 3));
-                                if (dia <= 0 || dia > 31) {
-                                    JOptionPane.showMessageDialog(null, "El dia debe estar entre 1 y 31", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El dia debe ser numerico", "Error", 2);
-                            }
+                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
                         } while (dia <= 0 || dia > 31);
 
                         do {
-                            mes = 0;
-                            try {
-                                mes = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Mes de Renta:", "Alta de una Renta", 3));
-                                if (mes <= 0 || mes > 12) {
-                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El mes debe ser numerico", "Error", 2);
-                            }
+                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
                         } while (mes <= 0 || mes > 12);
 
                         do {
-                            anio = 0;
-                            try {
-                                anio = Integer.parseInt(
-                                        JOptionPane.showInputDialog(null, "Año de Renta:", "Alta de una Renta", 3));
-                                if (anio > 2026 || anio > 1900) {
-                                    JOptionPane.showMessageDialog(null, "El año debe ser entre 2026 y 2000", "Dato erroneo", 2);
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(null, "El año debe ser numerico", "Error", 2);
-                            }
-                        } while (anio > 2026 || anio > 1900);
-                        fecha.setFecha(dia, mes, anio);
-                        fechaValida = fecha.fechaCorrecta();
-                        if (!fechaValida) {
-                            JOptionPane.showMessageDialog(null, "La fecha completa no es valida", "Error", 2);
-                        }
-                    } while (!fechaValida);
-                    break;
+                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
+                        } while (anio < 2000 || anio > 2026);
+
+                        Fecha fechaE = new Fecha(dia, mes, anio);
+
+                        rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
+
+                        JOptionPane.showMessageDialog(null, "Renta registrada");
+
+                    } while (false);
+                break;
 
                 case 5:
-                    // Listar automóviles
-                    encontrado = false;
-                    listaAutomoviles = "        LISTA DE AUTOMÓVILES        " + "\nId Vehículo    Modelo    Marca   Tipo     Transmisión\n" + "- - - - - - - - - - - - - - - -\n";
-                    for (int i = 0; i < contV; i++) {
-                        if (vehiculo[i] instanceof Automovil) {
-                            encontrado = true;
-                            Automovil a = (Automovil) vehiculo[i];
-                            listaAutomoviles += a.getIdVehiculo() + "      "
-                                    + a.getModelo() + "       "
-                                    + a.getMarca() + "      "
-                                    + a.getTipo() + "      "
-                                    + a.getTransmision();
-                        }
-                    }
-                    if (encontrado) {
-                        JOptionPane.showMessageDialog(null, listaAutomoviles, "Lista de Automoviles", 1);
+                    listaAutomoviles = "LISTA DE AUTOMÓVILES\n";
+                    listaAutomoviles += "Id   Modelo   Marca   Tipo   Transmisión\n";
+                    listaAutomoviles += "----------------------------------------\n";
+
+                    if (autos.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay automóviles");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Aun no hay Automóviles registrados...", "Sin registro", 1);
+                        for (int i = 0; i < autos.size(); i++) {
+                            listaAutomoviles += autos.get(i).getIdVehiculo() + "   "
+                                    + autos.get(i).getModelo() + "   "
+                                    + autos.get(i).getMarca() + "   "
+                                    + autos.get(i).getTipo() + "   "
+                                    + autos.get(i).getTransmision() + "\n";
+                        }
+                        JOptionPane.showMessageDialog(null, listaAutomoviles);
                     }
-                    break;
+                break;
 
                 case 6:
-                    // Listar motocicletas
-                    encontrado = false;
-                    listaMotocicletas = "        LISTA DE MOTOCICLETAS        " + "\nId Vehículo    Modelo    Marca   No. Llantas     Tipo\n" + "- - - - - - - - - - - - - - - -\n";
-                    for (int i = 0; i < contV; i++) {
-                        if (vehiculo[i] instanceof Motocicleta) {
-                            encontrado = true;
-                            Motocicleta m = (Motocicleta) vehiculo[i];
-                            listaAutomoviles += m.getIdVehiculo() + "      "
-                                    + m.getModelo() + "       "
-                                    + m.getMarca() + "      "
-                                    + m.getNoLanta() + "      "
-                                    + m.getTipo();
-                        }
-                    }
-                    if (encontrado) {
-                        JOptionPane.showMessageDialog(null, listaMotocicletas, "Lista de Motocicletas", 1);
+                    listaMotocicletas = "LISTA DE MOTOCICLETAS\n";
+                    listaMotocicletas += "Id   Modelo   Marca   Llantas   Tipo\n";
+                    listaMotocicletas += "------------------------------------\n";
+
+                    if (motos.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay motocicletas");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Aun no hay Motocicletas registrados...", "Sin registro", 1);
+                        for (int i = 0; i < motos.size(); i++) {
+                            listaMotocicletas += motos.get(i).getIdVehiculo() + "   "
+                                    + motos.get(i).getModelo() + "   "
+                                    + motos.get(i).getMarca() + "   "
+                                    + motos.get(i).getNoLlantas() + "   "
+                                    + motos.get(i).getTipo() + "\n";
+                        }
+                        JOptionPane.showMessageDialog(null, listaMotocicletas);
                     }
-                    break;
+                break;
 
                 case 7:
-                    // Listar clientes - error del ciclo
-                    encontrado = false;
-                    listaClientes = "        LISTA DE CLIENTES        " + "\nId Cliente    Nombre    Tipo   Fecha de Nacimiento\n" + "- - - - - - - - - - - - - - - -\n";
-                    for (int i = 0; i < cont; i++) {
-                        if (cliente[i] instanceof Cliente) {
-                            encontrado = true;
-                            Cliente c = (Cliente) cliente[i];
-                            listaClientes += c.getIdCliente() + "      "
-                                    + c.getNombre() + "       "
-                                    + c.getTipo() + "      "
-                                    + c.getFechaNacimiento() + "      ";
-                        }
-                    }
-                    if (encontrado) {
-                        JOptionPane.showMessageDialog(null, listaClientes, "Lista de Clientes", 1);
+                    listaClientes = "LISTA DE CLIENTES\n";
+
+                    if (clientes.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay clientes");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Aun no hay Clientes registrados...", "Sin registro", 1);
+                        for (int i = 0; i < clientes.size(); i++) {
+                            listaClientes += clientes.get(i).getIdCliente() + " "
+                                    + clientes.get(i).getNombre() + " "
+                                    + clientes.get(i).getTipo() + "\n";
+                        }
+                        JOptionPane.showMessageDialog(null, listaClientes);
                     }
-                    break;
+                break;
                 case 8:
-                    // Listar rentas
-                    encontrado = false;
-                    listaRentas = "        LISTA DE RENTAS        " + "\nId Renta    Id Vehículo    Id Cliente   Fecha Renta\n" + "- - - - - - - - - - - - - - - -\n";
-                    for (int i = 0; i < contR; i++) {
-                        if (renta[i] instanceof Renta) {
-                            encontrado = true;
-                            Renta a = (Renta) renta[i];
-                            listaRentas += a.getIdRenta() + "      "
-                                    + a.getIdVehiculo() + "       "
-                                    + a.getIdCliente() + "      "
-                                    + a.getFechaRenta() + "      ";
-                        }
-                    }
-                    if (encontrado) {
-                        JOptionPane.showMessageDialog(null, listaRentas, "Lista de Rentas", 1);
+                    listaRentas = "LISTA DE RENTAS\n";
+                    listaRentas += "Id   IdVehiculo   IdCliente   FechaRenta\n";
+                    listaRentas += "----------------------------------------\n";
+
+                    if (rentas.size() == 0) {
+                        JOptionPane.showMessageDialog(null, "No hay rentas");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Aun no hay Rentas registrados...", "Sin registro", 1);
+                        for (int i = 0; i < rentas.size(); i++) {
+                            listaRentas += rentas.get(i).getIdRenta() + "   "
+                                    + rentas.get(i).getIdVehiculo() + "   "
+                                    + rentas.get(i).getIdCliente() + "   "
+                                    + rentas.get(i).getFechaRenta().getFecha() + "\n";
+                        }
+                        JOptionPane.showMessageDialog(null, listaRentas);
                     }
-                    break;
+                break;
 
                 case 9:
-                    // Ver detalles de un automóvil
                     do {
                         idVehiculo = -1;
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el Id del Automovil que desea consultar: ", "Consulta de un Automovil", 3));
+                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el Id del Automovil:", "Consulta", 3));
                             if (idVehiculo <= 0) {
-                                JOptionPane.showMessageDialog(null, "El id del automovil debe ser positivo", "Dato Erroneo", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id del automovil debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idVehiculo <= 0);
-                    posV = buscaVehiculo(vehiculo, idVehiculo, contV, 1);
-                    if (posV == -1) {
-                        JOptionPane.showMessageDialog(null, "No se encontro ese id de automovil\n Verifique", "No Registrado", 1);
-                    } else if (posV == -2) {
-                        JOptionPane.showMessageDialog(null, "El id no corresponde al de un automovil", "Id de Automovil Incorrecto", 2);
-                    } else {
-                        JOptionPane.showMessageDialog(null, vehiculo[posV].getDatos(), "Consulta de un Automovil", 1);
+
+                    posV = -1;
+
+                    for (int i = 0; i < autos.size(); i++) {
+                        if (autos.get(i).getIdVehiculo() == idVehiculo) {
+                            JOptionPane.showMessageDialog(null, autos.get(i).getDatos());
+                            posV = i;
+                            break;
+                        }
                     }
-                    break;
+
+                    if (posV == -1) {
+                        JOptionPane.showMessageDialog(null, "El automóvil no existe");
+                    }
+                break;
 
                 case 10:
-                    // Ver detalles de una motocicleta
                     do {
                         idVehiculo = -1;
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el Id de la Motocicleta que desea consultar: ", "Consulta de una Motocicleta", 3));
+                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el Id de la motocicleta:", "Consulta", 3));
                             if (idVehiculo <= 0) {
-                                JOptionPane.showMessageDialog(null, "El id de la motocicleta debe ser positivo", "Dato Erroneo", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id de la motocicleta debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idVehiculo <= 0);
-                    posV = buscaVehiculo(vehiculo, idVehiculo, contV, 2);
-                    if (posV == -1) {
-                        JOptionPane.showMessageDialog(null, "No se encontro ese id de automovil\n Verifique", "No Registrado", 1);
-                    } else if (posV == -2) {
-                        JOptionPane.showMessageDialog(null, "El id no corresponde al de un automovil", "Id de Motocicleta Incorrecto", 2);
-                    } else {
-                        JOptionPane.showMessageDialog(null, vehiculo[posV].getDatos(), "Consulta de una Motocicleta", 1);
-                    }
-                    break;
 
-                case 11:
-                    // Ver detalles de un cliente
-                    idCliente = JOptionPane.showInputDialog(null, "Id del cliente: ", "Buscar Cliente", 3);
-                    posC = -1;
-                    for (int i = 0; i < idCliente.size(); i++) {
-                        if (idCliente.equalsIgnoreCase(cliente.get(i).getIdCliente())) {
-                            JOptionPane.showMessageDialog(null, cliente.get(i).getDatos());
-                            posC = i;
+                    posV = -1;
+
+                    for (int i = 0; i < motos.size(); i++) {
+                        if (motos.get(i).getIdVehiculo() == idVehiculo) {
+                            JOptionPane.showMessageDialog(null, motos.get(i).getDatos());
+                            posV = i;
                             break;
-                        } else {
-                            JOptionPane.showMessageDialog(null, "El Id del Cliente no esta registrado.", "Cliente no  encontrado", 1);
                         }
                     }
-                    if (posC == -1) {
-                        JOptionPane.showMessageDialog(null, "El Id del Cliente no esta disponible", "Cliente no encontrado", 1);
+
+                    if (posV == -1) {
+                        JOptionPane.showMessageDialog(null, "La motocicleta no existe");
                     }
-                    break;
+                break;
+
+                case 11:
+                    do {
+                        idCliente = JOptionPane.showInputDialog(null, "Ingrese el Id del cliente:", "Consulta", 3);
+                        if (idCliente.isBlank()) {
+                            JOptionPane.showMessageDialog(null, "El Id es obligatorio");
+                        }
+                    } while (idCliente.isBlank());
+
+                    posC = -1;
+
+                    for (int i = 0; i < clientes.size(); i++) {
+                        if (idCliente.equalsIgnoreCase(clientes.get(i).getIdCliente())) {
+                            JOptionPane.showMessageDialog(null, clientes.get(i).getDatos());
+                            posC = i;
+                            break;
+                        }
+                    }
+
+                    if (posC == -1) {
+                        JOptionPane.showMessageDialog(null, "El cliente no existe");
+                    }
+                break;
 
                 case 12:
-                    // Ver detalles de una renta
                     do {
                         idRenta = -1;
                         try {
-                            idRenta = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el Id de la Renta que desea consultar: ", "Consulta de una Renta", 3));
+                            idRenta = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la renta:", "Consulta", 3));
                             if (idRenta <= 0) {
-                                JOptionPane.showMessageDialog(null, "El id de la renta debe ser positivo", "Dato Erroneo", 2);
+                                JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "El id de la renta debe ser numerico", "Dato Erroneo", 2);
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idRenta <= 0);
-                    posR = buscaRenta(renta, idRenta, contR, 1);
-                    if (posR == -1) {
-                        JOptionPane.showMessageDialog(null, "No se encontro ese id de la renta\n Verifique", "No Registrado", 1);
-                    } else {
-                        JOptionPane.showMessageDialog(null, renta[posR].getDatos(), "Consulta de una Motocicleta", 1);
+
+                    posR = -1;
+
+                    for (int i = 0; i < rentas.size(); i++) {
+                        if (rentas.get(i).getIdRenta() == idRenta) {
+                            posR = i;
+                            break;
+                        }
                     }
-                    break;
+
+                    if (posR == -1) {
+                        JOptionPane.showMessageDialog(null, "La renta no existe");
+                    } else {
+
+                        Renta r = rentas.get(posR);
+
+                        String datos = "DETALLE DE RENTA\n\n";
+
+                        int encontradoVehiculo = -1;
+
+                        for (int i = 0; i < autos.size(); i++) {
+                            if (autos.get(i).getIdVehiculo() == r.getIdVehiculo()) {
+                                datos += "AUTOMOVIL\n" + autos.get(i).getDatos() + "\n\n";
+                                encontradoVehiculo = 1;
+                                break;
+                            }
+                        }
+
+                        if (encontradoVehiculo == -1) {
+                            for (int i = 0; i < motos.size(); i++) {
+                                if (motos.get(i).getIdVehiculo() == r.getIdVehiculo()) {
+                                    datos += "MOTOCICLETA\n" + motos.get(i).getDatos() + "\n\n";
+                                    break;
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < clientes.size(); i++) {
+                            if (clientes.get(i).getIdCliente().equalsIgnoreCase(r.getIdCliente())) {
+                                datos += "CLIENTE\n" + clientes.get(i).getDatos() + "\n\n";
+                                break;
+                            }
+                        }
+
+                        datos += "Fecha renta: " + r.getFechaRenta().getFecha() + "\n";
+                        datos += "Fecha entrega: " + r.getFechaEntrega().getFecha();
+
+                        JOptionPane.showMessageDialog(null, datos);
+                    }
+                break;
 
                 case 13:
-                    // Eliminar un automóvil
-                    String input = JOptionPane.showInputDialog(null, "Id del automóvil que desea eliminar: ", "Eliminar un Automóvil", 3);
-                    idVehiculo = Integer.parseInt(input);
-                    res;
+                    idVehiculo = Integer.parseInt(JOptionPane.showInputDialog("Id del automóvil a eliminar:"));
+
                     posV = -1;
-                    // Buscar vehículo
-                    for (int i = 0; i < vehiculo.length; i++) {
-                        if (vehiculo[i] != null && idVehiculo == vehiculo[i].getIdVehiculo()) {
-                            JOptionPane.showMessageDialog(null, vehiculo[i].getDatos());
-                            res = JOptionPane.showConfirmDialog(null, vehiculo[i].getDatos() + "\n\n¿Está seguro de eliminar este Automóvil?", "Automóvil Encontrado", JOptionPane.YES_NO_OPTION);
+
+                    for (int i = 0; i < autos.size(); i++) {
+                        if (autos.get(i).getIdVehiculo() == idVehiculo) {
+                            res = JOptionPane.showConfirmDialog(null, autos.get(i).getDatos() + "\n¿Eliminar?");
                             if (res == JOptionPane.YES_OPTION) {
-                                posV = i;
-                                // Eliminar (corrimiento)
-                                for (int j = i; j < vehiculo.length - 1; j++) {
-                                    vehiculo[j] = vehiculo[j + 1];
-                                }
-                                vehiculo[vehiculo.length - 1] = null;
-                                JOptionPane.showMessageDialog(null, "Automóvil Eliminado", "Eliminar Automóvil", 3);
+                                autos.remove(i);
+                                JOptionPane.showMessageDialog(null, "Automóvil eliminado");
                             }
+                            posV = i;
                             break;
                         }
                     }
-                    // No encontrado
+
                     if (posV == -1) {
-                        JOptionPane.showMessageDialog(null, "El id del automóvil no está disponible", "Automóvil no encontrado", 2);
+                        JOptionPane.showMessageDialog(null, "No existe ese automóvil");
                     }
-                    break;
+                break;
 
                 case 14:
-                    // Eliminar una motocicleta
-                    String input = JOptionPane.showInputDialog(null, "Id de la Motocicleta que desea eliminar: ", "Eliminar una Motocicleta", 3);
-                    idVehiculo = Integer.parseInt(input);
-                    res;
+                    idVehiculo = Integer.parseInt(JOptionPane.showInputDialog("Id de la motocicleta a eliminar:"));
+
                     posV = -1;
-                    // Buscar vehículo
-                    for (int i = 0; i < vehiculo.length; i++) {
-                        if (vehiculo[i] != null && idVehiculo == vehiculo[i].getIdVehiculo()) {
-                            JOptionPane.showMessageDialog(null, vehiculo[i].getDatos());
-                            res = JOptionPane.showConfirmDialog(null,
-                                    vehiculo[i].getDatos() + "\n\n¿Está seguro de eliminar esta Motocicleta?", "Motocicleta Encontrada", JOptionPane.YES_NO_OPTION);
+
+                    for (int i = 0; i < motos.size(); i++) {
+                        if (motos.get(i).getIdVehiculo() == idVehiculo) {
+                            res = JOptionPane.showConfirmDialog(null, motos.get(i).getDatos() + "\n¿Eliminar?");
                             if (res == JOptionPane.YES_OPTION) {
-                                posV = i;
-                                // Eliminar (corrimiento)
-                                for (int j = i; j < vehiculo.length - 1; j++) {
-                                    vehiculo[j] = vehiculo[j + 1];
-                                }
-                                vehiculo[vehiculo.length - 1] = null;
-                                JOptionPane.showMessageDialog(null, "Automóvil Eliminado", "Eliminar Motocicleta", 3);
+                                motos.remove(i);
+                                JOptionPane.showMessageDialog(null, "Motocicleta eliminada");
                             }
+                            posV = i;
                             break;
                         }
                     }
-                    // No encontrado
+
                     if (posV == -1) {
-                        JOptionPane.showMessageDialog(null, "El id de la Motocicleta no está disponible", "Motocicleta no encontrado", 2);
+                        JOptionPane.showMessageDialog(null, "No existe esa motocicleta");
                     }
-                    break;
+                break;
 
                 case 15:
-                    // Eliminar un cliente
-                    idCliente = JOptionPane.showInputDialog(null, "Id del cliente que desea eliminar: ", "Eliminar un Cliente", 3);
-                    res;
+                    idCliente = JOptionPane.showInputDialog("Id del cliente a eliminar:");
+
                     posC = -1;
-                    // Buscar cliente
-                    for (int i = 0; i < cliente.length; i++) {
-                        if (cliente[i] != null && idCliente.equalsIgnoreCase(cliente[i].getIdCliente())) {
-                            JOptionPane.showMessageDialog(null, cliente[i].getDatos());
-                            res = JOptionPane.showConfirmDialog(null, cliente[i].getDatos() + "\n\n¿Está seguro de eliminar este Cliente?", "Cliente Encontrado", JOptionPane.YES_NO_OPTION);
+
+                    for (int i = 0; i < clientes.size(); i++) {
+                        if (idCliente.equalsIgnoreCase(clientes.get(i).getIdCliente())) {
+                            res = JOptionPane.showConfirmDialog(null, clientes.get(i).getDatos() + "\n¿Eliminar?");
                             if (res == JOptionPane.YES_OPTION) {
-                                posC = i;
-                                // Eliminar (corrimiento)
-                                for (int j = i; j < cliente.length - 1; j++) {
-                                    cliente[j] = cliente[j + 1];
-                                }
-                                cliente[cliente.length - 1] = null;
-                                JOptionPane.showMessageDialog(null, "Cliente Eliminado", "Eliminar Cliente", 3);
+                                clientes.remove(i);
+                                JOptionPane.showMessageDialog(null, "Cliente eliminado");
                             }
+                            posC = i;
                             break;
                         }
                     }
-                    // No encontrado
+
                     if (posC == -1) {
-                        JOptionPane.showMessageDialog(null, "El id del cliente no está disponible", "Cliente no encontrado", 2);
+                        JOptionPane.showMessageDialog(null, "No existe ese cliente");
                     }
-                    break;
+                break;
 
                 case 16:
-                    // Eliminar una renta
-                    String input = JOptionPane.showInputDialog(null, "Id de la Renta que desea eliminar: ", "Eliminar una Renta", 3);
-                    idRenta = Integer.parseInt(input);
-                    res;
+                    idRenta = Integer.parseInt(JOptionPane.showInputDialog("Id de la renta a eliminar:"));
+
                     posR = -1;
-                    // Buscar vehículo
-                    for (int i = 0; i < renta.length; i++) {
-                        if (renta[i] != null && idRenta == renta[i].getIdRenta()) {
-                            JOptionPane.showMessageDialog(null, renta[i].getDatos());
-                            res = JOptionPane.showConfirmDialog(null, renta[i].getDatos() + "\n\n¿Está seguro de eliminar esta Renta?", "Renta Encontrada", JOptionPane.YES_NO_OPTION);
+
+                    for (int i = 0; i < rentas.size(); i++) {
+                        if (rentas.get(i).getIdRenta() == idRenta) {
+                            res = JOptionPane.showConfirmDialog(null, rentas.get(i).getDatos() + "\n¿Eliminar?");
                             if (res == JOptionPane.YES_OPTION) {
-                                posR = i;
-                                // Eliminar (corrimiento)
-                                for (int j = i; j < renta.length - 1; j++) {
-                                    renta[j] = renta[j + 1];
-                                }
-                                renta[renta.length - 1] = null; JOptionPane.showMessageDialog(null, "Renta Eliminada", "Eliminar Renta", 3);
+                                rentas.remove(i);
+                                JOptionPane.showMessageDialog(null, "Renta eliminada");
                             }
+                            posR = i;
                             break;
                         }
                     }
-                    // No encontrado
+
                     if (posR == -1) {
-                        JOptionPane.showMessageDialog(null, "El id de la renta no está disponible", "Renta no encontrada", 2);
+                        JOptionPane.showMessageDialog(null, "No existe esa renta");
                     }
-                    break;
+                break;
 
                 case 17:
-                    // Salir
                     JOptionPane.showMessageDialog(null, "Gracias por su visita..." + "\nElaborado por: MFAM  WOCM   IISM" + "\nCopyright 2026");
                     break;
 
@@ -718,6 +674,29 @@ public class MenuRenta {
             }
 
         } while (op != 17);
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream("datos.txt");
+            ObjectOutputStream salida = new ObjectOutputStream(fout);
+
+            salida.writeObject(autos);
+            salida.writeObject(motos);
+            salida.writeObject(clientes);
+            salida.writeObject(rentas);
+
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Archivo no encontrado");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al guardar");
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al cerrar archivo");
+            }
+        }
     }
 
     //funcion para ver si el vehiculo ya exhiste
