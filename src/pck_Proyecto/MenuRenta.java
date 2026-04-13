@@ -46,6 +46,7 @@ public class MenuRenta {
         int op, idVehiculo, anio, noPuertas, noVelocidades, noLlantas, idRenta, dia, mes, contV = 0, contR = 0, busVehiculo, posV, posR, posC, res;
         String tipo, transmision, modelo, marca, color, idCliente, nombre, telefono, correo, listaAutomoviles, listaMotocicletas, listaClientes, listaRentas;
         boolean encontrado;
+        boolean fechaValida;
 
         String menu = " - - - MENU RENTA DE AUTOS Y MOTOS - - -\n\n"
                 + "1) Alta de automóvil\n"
@@ -204,34 +205,44 @@ public class MenuRenta {
                         }
                     } while (telefono.isBlank());
 
-                    do {
-                        dia = 0;
-                        try {
-                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                        }
-                    } while (dia <= 0 || dia > 31);
+                    Fecha f = null;
 
                     do {
-                        mes = 0;
-                        try {
-                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                        }
-                    } while (mes <= 0 || mes > 12);
+                        do {
+                            dia = 0;
+                            try {
+                                dia = Integer.parseInt(JOptionPane.showInputDialog("Dia:"));
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                            }
+                        } while (dia <= 0);
 
-                    do {
-                        anio = 0;
-                        try {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                        }
-                    } while (anio < 1920 || anio > 2008);
+                        do {
+                            mes = 0;
+                            try {
+                                mes = Integer.parseInt(JOptionPane.showInputDialog("Mes:"));
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                            }
+                        } while (mes <= 0);
 
-                    Fecha f = new Fecha(dia, mes, anio);
+                        do {
+                            anio = 0;
+                            try {
+                                anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                            }
+                        } while (anio <= 0);
+
+                        f = new Fecha(dia, mes, anio);
+                        fechaValida = f.fechaCorrecta();
+
+                        if (!fechaValida) {
+                            JOptionPane.showMessageDialog(null, "Fecha incorrecta");
+                        }
+
+                    } while (!fechaValida);
 
                     do {
                         correo = JOptionPane.showInputDialog(null, "Correo:", "Alta de un Cliente", 3);
@@ -324,68 +335,70 @@ public class MenuRenta {
 
                     } while (idCliente.isBlank() || posC == -1);
 
+                    Fecha fechaR = null;
+
                     do {
-                        dia = 0;
-                        try {
+                        do {
                             dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                        }
-                    } while (dia <= 0 || dia > 31);
+                        } while (dia <= 0);
 
-                    do {
-                        mes = 0;
-                        try {
+                        do {
                             mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
-                        }
-                    } while (mes <= 0 || mes > 12);
+                        } while (mes <= 0);
 
-                    do {
-                        anio = 0;
-                        try {
+                        do {
                             anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        } while (anio <= 0);
+
+                        fechaR = new Fecha(dia, mes, anio);
+
+                        if (!fechaR.fechaCorrecta()) {
+                            JOptionPane.showMessageDialog(null, "Fecha incorrecta");
                         }
-                    } while (anio < 2000 || anio > 2026);
 
-                    Fecha fechaR = new Fecha(dia, mes, anio);
+                    } while (!fechaR.fechaCorrecta());
 
-                    do {
-                        dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
-                    } while (dia <= 0 || dia > 31);
+                    Fecha fechaE = null;
 
                     do {
-                        mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
-                    } while (mes <= 0 || mes > 12);
+                        do {
+                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
+                        } while (dia <= 0);
 
-                    do {
-                        anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
-                    } while (anio < 2000 || anio > 2026);
+                        do {
+                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
+                        } while (mes <= 0);
 
-                    Fecha fechaE = new Fecha(dia, mes, anio);
+                        do {
+                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
+                        } while (anio <= 0);
+
+                        fechaE = new Fecha(dia, mes, anio);
+
+                        if (!fechaE.fechaCorrecta()) {
+                            JOptionPane.showMessageDialog(null, "Fecha incorrecta");
+                        }
+
+                    } while (!fechaE.fechaCorrecta());
 
                     rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
 
                     JOptionPane.showMessageDialog(null, "Renta registrada");
-
                 break;
 
                 case 5:
-                    listaAutomoviles = "LISTA DE AUTOMÓVILES\n";
-                    listaAutomoviles += "Id   Modelo   Marca   Tipo   Transmisión\n";
-                    listaAutomoviles += "----------------------------------------\n";
+                    listaAutomoviles = "        LISTA DE AUTOMÓVILES\n";
+                    listaAutomoviles += "ID   MODELO     MARCA      TIPO      TRANS\n";
+                    listaAutomoviles += "-------------------------------------------\n";
 
                     if (autos.size() == 0) {
                         JOptionPane.showMessageDialog(null, "No hay automóviles");
                     } else {
                         for (int i = 0; i < autos.size(); i++) {
-                            listaAutomoviles += autos.get(i).getIdVehiculo() + "   "
-                                    + autos.get(i).getModelo() + "   "
-                                    + autos.get(i).getMarca() + "   "
-                                    + autos.get(i).getTipo() + "   "
+                            listaAutomoviles += autos.get(i).getIdVehiculo() + "    "
+                                    + autos.get(i).getModelo() + "    "
+                                    + autos.get(i).getMarca() + "    "
+                                    + autos.get(i).getTipo() + "    "
                                     + autos.get(i).getTransmision() + "\n";
                         }
                         JOptionPane.showMessageDialog(null, listaAutomoviles);
@@ -393,18 +406,18 @@ public class MenuRenta {
                 break;
 
                 case 6:
-                    listaMotocicletas = "LISTA DE MOTOCICLETAS\n";
-                    listaMotocicletas += "Id   Modelo   Marca   Llantas   Tipo\n";
-                    listaMotocicletas += "------------------------------------\n";
+                    listaMotocicletas = "        LISTA DE MOTOCICLETAS\n";
+                    listaMotocicletas += "ID   MODELO     MARCA      LLANTAS   TIPO\n";
+                    listaMotocicletas += "------------------------------------------\n";
 
                     if (motos.size() == 0) {
                         JOptionPane.showMessageDialog(null, "No hay motocicletas");
                     } else {
                         for (int i = 0; i < motos.size(); i++) {
-                            listaMotocicletas += motos.get(i).getIdVehiculo() + "   "
-                                    + motos.get(i).getModelo() + "   "
-                                    + motos.get(i).getMarca() + "   "
-                                    + motos.get(i).getNoLlantas() + "   "
+                            listaMotocicletas += motos.get(i).getIdVehiculo() + "    "
+                                    + motos.get(i).getModelo() + "    "
+                                    + motos.get(i).getMarca() + "    "
+                                    + motos.get(i).getNoLlantas() + "    "
                                     + motos.get(i).getTipo() + "\n";
                         }
                         JOptionPane.showMessageDialog(null, listaMotocicletas);
@@ -412,31 +425,34 @@ public class MenuRenta {
                 break;
 
                 case 7:
-                    listaClientes = "LISTA DE CLIENTES\n";
+                    listaClientes = "        LISTA DE CLIENTES\n";
+                    listaClientes += "ID   NOMBRE     TIPO\n";
+                    listaClientes += "---------------------------\n";
 
                     if (clientes.size() == 0) {
                         JOptionPane.showMessageDialog(null, "No hay clientes");
                     } else {
                         for (int i = 0; i < clientes.size(); i++) {
-                            listaClientes += clientes.get(i).getIdCliente() + " "
-                                    + clientes.get(i).getNombre() + " "
+                            listaClientes += clientes.get(i).getIdCliente() + "    "
+                                    + clientes.get(i).getNombre() + "    "
                                     + clientes.get(i).getTipo() + "\n";
                         }
                         JOptionPane.showMessageDialog(null, listaClientes);
                     }
                 break;
+                
                 case 8:
-                    listaRentas = "LISTA DE RENTAS\n";
-                    listaRentas += "Id   IdVehiculo   IdCliente   FechaRenta\n";
-                    listaRentas += "----------------------------------------\n";
+                    listaRentas = "        LISTA DE RENTAS\n";
+                    listaRentas += "ID   VEHICULO   CLIENTE   FECHA\n";
+                    listaRentas += "--------------------------------------\n";
 
                     if (rentas.size() == 0) {
                         JOptionPane.showMessageDialog(null, "No hay rentas");
                     } else {
                         for (int i = 0; i < rentas.size(); i++) {
-                            listaRentas += rentas.get(i).getIdRenta() + "   "
-                                    + rentas.get(i).getIdVehiculo() + "   "
-                                    + rentas.get(i).getIdCliente() + "   "
+                            listaRentas += rentas.get(i).getIdRenta() + "    "
+                                    + rentas.get(i).getIdVehiculo() + "    "
+                                    + rentas.get(i).getIdCliente() + "    "
                                     + rentas.get(i).getFechaRenta().getFecha() + "\n";
                         }
                         JOptionPane.showMessageDialog(null, listaRentas);
