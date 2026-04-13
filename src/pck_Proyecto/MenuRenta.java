@@ -44,7 +44,7 @@ public class MenuRenta {
         }
         //Variables
         int op, idVehiculo, anio, noPuertas, noVelocidades, noLlantas, idRenta, dia, mes, contV = 0, contR = 0, busVehiculo, posV, posR, posC, res;
-        String tipo, transmision, modelo, marca, color, idCliente, nombre, telefono, correo, listaAutomoviles, listaMotocicletas, listaClientes, listaRentas;
+        String tipo, transmision, modelo, marca, color, idCliente = null, nombre, telefono, correo, listaAutomoviles, listaMotocicletas, listaClientes, listaRentas;
         boolean encontrado;
         boolean fechaValida;
 
@@ -266,27 +266,45 @@ public class MenuRenta {
                         break;
                     }
 
+                    boolean existe;
+
                     do {
                         idRenta = -1;
+                        existe = false;
+
                         try {
-                            idRenta = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la renta:", "Alta de renta", 3));
+                            idRenta = Integer.parseInt(JOptionPane.showInputDialog("Id de la renta:"));
+
                             if (idRenta <= 0) {
                                 JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+
+                            for (int i = 0; i < rentas.size(); i++) {
+                                if (rentas.get(i).getIdRenta() == idRenta) {
+                                    JOptionPane.showMessageDialog(null, "Ese ID ya existe");
+                                    existe = true;
+                                    break;
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Dato incorrecto");
                         }
-                    } while (idRenta <= 0);
+
+                    } while (idRenta <= 0 || existe);
 
                     do {
                         idVehiculo = -1;
+
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id del vehiculo:", "Alta de renta", 3));
+                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog("Id del vehiculo:"));
+
                             if (idVehiculo <= 0) {
                                 JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Dato incorrecto");
                         }
 
                         busVehiculo = -1;
@@ -314,10 +332,11 @@ public class MenuRenta {
                     } while (idVehiculo <= 0 || busVehiculo == -1);
 
                     do {
-                        idCliente = JOptionPane.showInputDialog(null, "Id del cliente:", "Alta de renta", 3);
+                        idCliente = JOptionPane.showInputDialog("Id del cliente:");
 
-                        if (idCliente.isBlank()) {
+                        if (idCliente == null || idCliente.isBlank()) {
                             JOptionPane.showMessageDialog(null, "Campo obligatorio");
+                            idCliente = "";
                         }
 
                         posC = -1;
@@ -339,51 +358,111 @@ public class MenuRenta {
 
                     do {
                         do {
-                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
-                        } while (dia <= 0);
+                            dia = 0;
+                            try {
+                                dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de renta:"));
+                                if (dia <= 0 || dia > 31) {
+                                    JOptionPane.showMessageDialog(null, "El día debe estar entre 1 y 31");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
+                        } while (dia <= 0 || dia > 31);
 
                         do {
-                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
-                        } while (mes <= 0);
+                            mes = 0;
+                            try {
+                                mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de renta:"));
+                                if (mes <= 0 || mes > 12) {
+                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
+                        } while (mes <= 0 || mes > 12);
 
                         do {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
+                            anio = 0;
+                            try {
+                                anio = Integer.parseInt(JOptionPane.showInputDialog("Año de renta:"));
+                                if (anio <= 0) {
+                                    JOptionPane.showMessageDialog(null, "El año debe ser positivo");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
                         } while (anio <= 0);
 
                         fechaR = new Fecha(dia, mes, anio);
 
                         if (!fechaR.fechaCorrecta()) {
                             JOptionPane.showMessageDialog(null, "Fecha incorrecta");
+                            fechaR = null;
                         }
 
-                    } while (!fechaR.fechaCorrecta());
+                    } while (fechaR == null);
 
                     Fecha fechaE = null;
 
                     do {
                         do {
-                            dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
-                        } while (dia <= 0);
+                            dia = 0;
+                            try {
+                                dia = Integer.parseInt(JOptionPane.showInputDialog("Dia de entrega:"));
+                                if (dia <= 0 || dia > 31) {
+                                    JOptionPane.showMessageDialog(null, "El día debe estar entre 1 y 31");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
+                        } while (dia <= 0 || dia > 31);
 
                         do {
-                            mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
-                        } while (mes <= 0);
+                            mes = 0;
+                            try {
+                                mes = Integer.parseInt(JOptionPane.showInputDialog("Mes de entrega:"));
+                                if (mes <= 0 || mes > 12) {
+                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
+                        } while (mes <= 0 || mes > 12);
 
                         do {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
+                            anio = 0;
+                            try {
+                                anio = Integer.parseInt(JOptionPane.showInputDialog("Año de entrega:"));
+                                if (anio <= 0) {
+                                    JOptionPane.showMessageDialog(null, "El año debe ser positivo");
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            }
                         } while (anio <= 0);
 
                         fechaE = new Fecha(dia, mes, anio);
 
                         if (!fechaE.fechaCorrecta()) {
                             JOptionPane.showMessageDialog(null, "Fecha incorrecta");
+                            fechaE = null;
+                        } else if (fechaE.getAnio() < fechaR.getAnio()) {
+                            JOptionPane.showMessageDialog(null, "La fecha de entrega no puede ser menor que la de renta");
+                            fechaE = null;
+                        } else if (fechaE.getAnio() == fechaR.getAnio() && fechaE.getMes() < fechaR.getMes()) {
+                            JOptionPane.showMessageDialog(null, "La fecha de entrega no puede ser menor que la de renta");
+                            fechaE = null;
+                        } else if (fechaE.getAnio() == fechaR.getAnio() && fechaE.getMes() == fechaR.getMes() && fechaE.getDia() < fechaR.getDia()) {
+                            JOptionPane.showMessageDialog(null, "La fecha de entrega no puede ser menor que la de renta");
+                            fechaE = null;
                         }
 
-                    } while (!fechaE.fechaCorrecta());
+                    } while (fechaE == null);
 
                     rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
 
                     JOptionPane.showMessageDialog(null, "Renta registrada");
+
                 break;
 
                 case 5:
