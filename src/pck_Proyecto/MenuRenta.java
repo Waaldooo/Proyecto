@@ -1,3 +1,6 @@
+//Acosta Morales María Fernanda 
+//Camacho Mendoza Waldo Oziel
+//Santamaria Martínez Iker Ilan
 package pck_proyecto;
 
 import java.io.FileInputStream;
@@ -83,7 +86,9 @@ public class MenuRenta {
                     do {
                         idVehiculo = -1;
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id del Automovil:", "Alta de un Automóvil", 3));
+                            String dato = JOptionPane.showInputDialog(null, "Id del Automovil:", "Alta de un Automóvil", 3);
+                            if (dato == null) break;
+                            idVehiculo = Integer.parseInt(dato);
                             if (idVehiculo <= 0) {
                                 JOptionPane.showMessageDialog(null, "El Id del Automóvil debe ser positivo", "Dato Erroneo", 2);
                             }
@@ -92,43 +97,68 @@ public class MenuRenta {
                         }
                     } while (idVehiculo <= 0);
 
+                    if (idVehiculo == -1) break;
+
                     do {
                         modelo = JOptionPane.showInputDialog(null, "Modelo:", "Alta de un Automóvil", 3);
+                        if (modelo == null) break;
                     } while (modelo.isBlank());
+
+                    if (modelo == null) break;
 
                     do {
                         marca = JOptionPane.showInputDialog(null, "Marca:", "Alta de un Automóvil", 3);
+                        if (marca == null) break;
                     } while (marca.isBlank());
+
+                    if (marca == null) break;
 
                     do {
                         anio = 0;
                         try {
-                            anio = Integer.parseInt(JOptionPane.showInputDialog(null, "Año:"));
+                            String dato = JOptionPane.showInputDialog(null, "Año:");
+                            if (dato == null) break;
+                            anio = Integer.parseInt(dato);
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "El año debe ser numerico");
                         }
-                    } while (anio < 1900 || anio > 2027);
+                    } while (anio < 2026 || anio > 2030);
+
+                    if (anio == 0) break;
 
                     do {
                         color = JOptionPane.showInputDialog(null, "Color:", "Alta de un Automóvil", 3);
+                        if (color == null) break;
                     } while (color.isBlank());
+
+                    if (color == null) break;
 
                     do {
                         tipo = JOptionPane.showInputDialog(null, "Tipo:", "Alta de un Automóvil", 3);
+                        if (tipo == null) break;
                     } while (tipo.isBlank());
+
+                    if (tipo == null) break;
 
                     do {
                         transmision = JOptionPane.showInputDialog(null, "Transmisión:", "Alta de un Automóvil", 3);
+                        if (transmision == null) break;
                     } while (transmision.isBlank());
+
+                    if (transmision == null) break;
 
                     do {
                         noPuertas = 0;
                         try {
-                            noPuertas = Integer.parseInt(JOptionPane.showInputDialog(null, "No. de puertas:", "Alta de un Automóvil", 3));
+                            String dato = JOptionPane.showInputDialog(null, "No. de puertas:", "Alta de un Automóvil", 3);
+                            if (dato == null) break;
+                            noPuertas = Integer.parseInt(dato);
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (noPuertas < 2 || noPuertas > 4);
+
+                    if (noPuertas == 0) break;
 
                     autos.add(new Automovil(tipo, transmision, noPuertas, idVehiculo, modelo, marca, anio, color));
                     JOptionPane.showMessageDialog(null, "Automóvil registrado");
@@ -138,38 +168,69 @@ public class MenuRenta {
                     do {
                         idVehiculo = -1;
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog(null, "Id de la Motocicleta:", "Alta de una Motocicleta", 3));
+                            String dato = JOptionPane.showInputDialog(null, "Id de la Motocicleta:", "Alta de una Motocicleta", 3);
+                            if (dato == null) break;
+                            idVehiculo = Integer.parseInt(dato);
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "Debe ser numerico");
                         }
                     } while (idVehiculo <= 0);
 
+                    if (idVehiculo == -1) break;
+
                     do {
                         modelo = JOptionPane.showInputDialog("Modelo:");
+                        if (modelo == null) break;
                     } while (modelo.isBlank());
+
+                    if (modelo == null) break;
 
                     do {
                         marca = JOptionPane.showInputDialog("Marca:");
+                        if (marca == null) break;
                     } while (marca.isBlank());
 
+                    if (marca == null) break;
+
                     do {
-                        anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
-                    } while (anio < 1900 || anio > 2027);
+                        anio = 0;
+                        try {
+                            anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
+                    } while (anio < 2026 || anio > 2030);
 
                     do {
                         color = JOptionPane.showInputDialog("Color:");
+                        if (color == null) break;
                     } while (color.isBlank());
+
+                    if (color == null) break;
 
                     do {
                         tipo = JOptionPane.showInputDialog("Tipo:");
+                        if (tipo == null) break;
                     } while (tipo.isBlank());
 
+                    if (tipo == null) break;
+
                     do {
-                        noVelocidades = Integer.parseInt(JOptionPane.showInputDialog("No velocidades:"));
+                        noVelocidades = 0;
+                        try {
+                            noVelocidades = Integer.parseInt(JOptionPane.showInputDialog("No velocidades:"));
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
                     } while (noVelocidades < 4 || noVelocidades > 7);
 
                     do {
-                        noLlantas = Integer.parseInt(JOptionPane.showInputDialog("No llantas:"));
+                        noLlantas = 0;
+                        try {
+                            noLlantas = Integer.parseInt(JOptionPane.showInputDialog("No llantas:"));
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Debe ser numerico");
+                        }
                     } while (noLlantas != 2);
 
                     motos.add(new Motocicleta(tipo, noVelocidades, noLlantas, idVehiculo, modelo, marca, anio, color));
@@ -179,31 +240,43 @@ public class MenuRenta {
                 case 3:
                     do {
                         idCliente = JOptionPane.showInputDialog(null, "Id del cliente:", "Alta de un Cliente", 3);
+                        if (idCliente == null) break;
                         if (idCliente.isBlank()) {
                             JOptionPane.showMessageDialog(null, "El id del cliente es algo requerido", "Dato Erroneo", 2);
                         }
                     } while (idCliente.isBlank());
 
+                    if (idCliente == null) break;
+
                     do {
                         nombre = JOptionPane.showInputDialog(null, "Nombre del cliente:", "Alta de un Cliente", 3);
+                        if (nombre == null) break;
                         if (nombre.isBlank()) {
                             JOptionPane.showMessageDialog(null, "El nombre del cliente es algo requerido", "Dato Erroneo", 2);
                         }
                     } while (nombre.isBlank());
 
+                    if (nombre == null) break;
+
                     do {
                         tipo = JOptionPane.showInputDialog(null, "Tipo:", "Alta de un Cliente", 3);
+                        if (tipo == null) break;
                         if (tipo.isBlank()) {
                             JOptionPane.showMessageDialog(null, "El tipo es algo requerido", "Dato Erroneo", 2);
                         }
                     } while (tipo.isBlank());
 
+                    if (tipo == null) break;
+
                     do {
                         telefono = JOptionPane.showInputDialog(null, "Telefono:", "Alta de un Cliente", 3);
+                        if (telefono == null) break;
                         if (telefono.isBlank()) {
                             JOptionPane.showMessageDialog(null, "El telefono es algo requerido", "Dato Erroneo", 2);
                         }
                     } while (telefono.isBlank());
+
+                    if (telefono == null) break;
 
                     Fecha f = null;
 
@@ -212,24 +285,33 @@ public class MenuRenta {
                             dia = 0;
                             try {
                                 dia = Integer.parseInt(JOptionPane.showInputDialog("Dia:"));
+                                if (dia <= 0 || dia > 31) {
+                                    JOptionPane.showMessageDialog(null, "El dia debe estar entre 1 y 31");
+                                }
                             } catch (NumberFormatException e) {
                                 JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
-                        } while (dia <= 0);
+                        } while (dia <= 0 || dia > 31);
 
                         do {
                             mes = 0;
                             try {
                                 mes = Integer.parseInt(JOptionPane.showInputDialog("Mes:"));
+                                if (mes <= 0 || mes > 12) {
+                                    JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12");
+                                }
                             } catch (NumberFormatException e) {
                                 JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
-                        } while (mes <= 0);
+                        } while (mes <= 0 || mes > 12);
 
                         do {
                             anio = 0;
                             try {
                                 anio = Integer.parseInt(JOptionPane.showInputDialog("Año:"));
+                                if (anio <= 0) {
+                                    JOptionPane.showMessageDialog(null, "El año debe ser positivo");
+                                }
                             } catch (NumberFormatException e) {
                                 JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
@@ -246,10 +328,13 @@ public class MenuRenta {
 
                     do {
                         correo = JOptionPane.showInputDialog(null, "Correo:", "Alta de un Cliente", 3);
+                        if (correo == null) break;
                         if (correo.isBlank()) {
                             JOptionPane.showMessageDialog(null, "El correo es requerido");
                         }
                     } while (correo.isBlank());
+
+                    if (correo == null) break;
 
                     clientes.add(new Cliente(idCliente, nombre, tipo, telefono, f, correo));
                     JOptionPane.showMessageDialog(null, "Cliente registrado");
@@ -273,7 +358,10 @@ public class MenuRenta {
                         existe = false;
 
                         try {
-                            idRenta = Integer.parseInt(JOptionPane.showInputDialog("Id de la renta:"));
+                            String conf = JOptionPane.showInputDialog("Id");
+                            if (conf == null) break;
+
+                            idRenta = Integer.parseInt(conf);
 
                             if (idRenta <= 0) {
                                 JOptionPane.showMessageDialog(null, "Debe ser positivo");
@@ -287,23 +375,28 @@ public class MenuRenta {
                                 }
                             }
 
-                        } catch (Exception e) {
+                        } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "Dato incorrecto");
                         }
 
                     } while (idRenta <= 0 || existe);
 
+                    if (idRenta == -1) break;
+
                     do {
                         idVehiculo = -1;
 
                         try {
-                            idVehiculo = Integer.parseInt(JOptionPane.showInputDialog("Id del vehiculo:"));
+                            String dato = JOptionPane.showInputDialog("Id del vehiculo:");
+                            if (dato == null) break;
+
+                            idVehiculo = Integer.parseInt(dato);
 
                             if (idVehiculo <= 0) {
                                 JOptionPane.showMessageDialog(null, "Debe ser positivo");
                             }
 
-                        } catch (Exception e) {
+                        } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "Dato incorrecto");
                         }
 
@@ -331,10 +424,13 @@ public class MenuRenta {
 
                     } while (idVehiculo <= 0 || busVehiculo == -1);
 
+                    if (idVehiculo == -1) break;
+
                     do {
                         idCliente = JOptionPane.showInputDialog("Id del cliente:");
+                        if (idCliente == null) break;
 
-                        if (idCliente == null || idCliente.isBlank()) {
+                        if (idCliente.isBlank()) {
                             JOptionPane.showMessageDialog(null, "Campo obligatorio");
                             idCliente = "";
                         }
@@ -354,6 +450,8 @@ public class MenuRenta {
 
                     } while (idCliente.isBlank() || posC == -1);
 
+                    if (idCliente == null) break;
+
                     Fecha fechaR = null;
 
                     do {
@@ -364,8 +462,8 @@ public class MenuRenta {
                                 if (dia <= 0 || dia > 31) {
                                     JOptionPane.showMessageDialog(null, "El día debe estar entre 1 y 31");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (dia <= 0 || dia > 31);
 
@@ -376,8 +474,8 @@ public class MenuRenta {
                                 if (mes <= 0 || mes > 12) {
                                     JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (mes <= 0 || mes > 12);
 
@@ -388,19 +486,19 @@ public class MenuRenta {
                                 if (anio <= 0) {
                                     JOptionPane.showMessageDialog(null, "El año debe ser positivo");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (anio <= 0);
 
                         fechaR = new Fecha(dia, mes, anio);
+                        fechaValida = fechaR.fechaCorrecta();
 
-                        if (!fechaR.fechaCorrecta()) {
+                        if (!fechaValida) {
                             JOptionPane.showMessageDialog(null, "Fecha incorrecta");
-                            fechaR = null;
                         }
 
-                    } while (fechaR == null);
+                    } while (!fechaValida);
 
                     Fecha fechaE = null;
 
@@ -412,8 +510,8 @@ public class MenuRenta {
                                 if (dia <= 0 || dia > 31) {
                                     JOptionPane.showMessageDialog(null, "El día debe estar entre 1 y 31");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (dia <= 0 || dia > 31);
 
@@ -424,8 +522,8 @@ public class MenuRenta {
                                 if (mes <= 0 || mes > 12) {
                                     JOptionPane.showMessageDialog(null, "El mes debe estar entre 1 y 12");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (mes <= 0 || mes > 12);
 
@@ -436,8 +534,8 @@ public class MenuRenta {
                                 if (anio <= 0) {
                                     JOptionPane.showMessageDialog(null, "El año debe ser positivo");
                                 }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "Dato incorrecto");
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Debe ser numerico");
                             }
                         } while (anio <= 0);
 
@@ -460,9 +558,7 @@ public class MenuRenta {
                     } while (fechaE == null);
 
                     rentas.add(new Renta(idRenta, idVehiculo, idCliente, fechaR, fechaE));
-
                     JOptionPane.showMessageDialog(null, "Renta registrada");
-
                 break;
 
                 case 5:
@@ -505,7 +601,7 @@ public class MenuRenta {
 
                 case 7:
                     listaClientes = "        LISTA DE CLIENTES\n";
-                    listaClientes += "ID   NOMBRE     TIPO\n";
+                    listaClientes += "ID   NOMBRE     TIPO   FECHA NACIMIENTO\n";
                     listaClientes += "---------------------------\n";
 
                     if (clientes.size() == 0) {
@@ -514,7 +610,8 @@ public class MenuRenta {
                         for (int i = 0; i < clientes.size(); i++) {
                             listaClientes += clientes.get(i).getIdCliente() + "    "
                                     + clientes.get(i).getNombre() + "    "
-                                    + clientes.get(i).getTipo() + "\n";
+                                    + clientes.get(i).getTipo() + "   "
+                                    + clientes.get(i).getFechaNacimiento().getFecha()+"\n";
                         }
                         JOptionPane.showMessageDialog(null, listaClientes);
                     }
